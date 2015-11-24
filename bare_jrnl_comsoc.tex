@@ -475,25 +475,53 @@ In this section, we introduce the metrics of interest to evaluate the performanc
 In this section, we explain the state-of-the-art of the position-based routing protocols in 3D MANET, in particular describe the forwarding algorithms employed in the routing protocols. The extension of progress-based algorithms (the first four) in 3D networks, proposed in \cite{kao:3d}, is relatively simple, as we need only the definition of the Euclidean distance between two points \(u\) and \(v\) in three dimensions and the definition of the sphere with center \(c\) and radius \(r\).
 
 \subsection{3D Greedy}
-\emph{Greedy} is a simply progress-based forwarding algorithm. The current node forwards the packet to the neighbor node that minimizes the distance to the destination node. With \emph{Greedy}, the current node's distance does not compare against the distances of its neighbors, but it is used to select the forward nodes and the backward nodes: if there is no any neighbor node closer to the destination node than the current node, the algorithm fails. More precisely, there are two forwarding algorithms that use greedy strategy, and differ
+\emph{Greedy} is a simply progress-based forwarding strategy. The current node forwards the packet to the neighbor node that minimizes the distance to the destination node. With \emph{Greedy}, the current node's distance does not compare against the distances of its neighbors, but it is used to select the forward nodes and the backward nodes: if there is no any neighbor node closer to the destination node than the current node, the algorithm fails. More precisely, there are two forwarding algorithms that use greedy strategy, and differ
 on which neighbors consider on the choice:
 \begin{itemize}
-\item \emph{Greedy} []: the current node \(c\) forwards the packet to one of its neighbors that is closer to \(d\) than \(c\) and any other neighbors.
-\item \emph{Gedir} []: the current node \(c\) forwards the packet to one of its neighbors that is closer to \(d\) than any other neighbors, but not necessarily closer to \(d\) than node \(c\) itself.
+\item \emph{Greedy} \cite{finn:greedy}: the current node \(c\) forwards the packet to one of its neighbors that is closer to \(d\) than \(c\) and any other neighbors.
+\item \emph{GEDIR} \cite{lin:loop}: the current node \(c\) forwards the packet to one of its neighbors that is closer to \(d\) than any other neighbors, but not necessarily closer to \(d\) than node \(c\) itself.
 \end{itemize}
 
+In \emph{GEDIR}, all neighbors are considered. So, also the nodes that are in backward direction can be chosen and the only kind of loop that may be formed using this algorithm is the local loop between \(c\) and the node \(prev\) that sent the message to \(c\) in the previous step \cite{lin:loop}, but this case is avoided by the assumption mentioned follow.
+If the next node for forwarding is the node that sent message to \(c\), it means that the packet has reached a local minimum \(c\) and then the algorithm fails.\\
+Instead, in \emph{Greedy}, only the neighbors that are closer to the destination than \(c\) are considered. If no one is closer to \(d\), algorithm fails. Fig. \ref{fig:progress} shows an example of choosing of next node using progress-based algorithms. The current node \(c\) has five nodes that are in the direction of destination node \(d\) inside its range, but with \emph{Greedy} the node that is closer to the destination is \(2\) (the closer to the dotted arc). In this survey we refer to \emph{Greedy} algorithm and specify when we consider \emph{GEDIR} (for example in \emph{Random Walk}).
+
 \subsection{3D Compass}
-\emph{Compass} (or \emph{Directional, DIR}) algorithm uses the direction of nodes to selects the best forwarding node. The current node \(c\) uses the location information of \(d\) to calculate its direction. Then, forwards the packet to the neighbor node \emph{u} such that the direction \emph{cu} is closest to the direction \(cd\), that is the neighbor node u that minimizes the angle between u, c and the destination node d, min{∠u 1 cd, ..., ∠u n cd}. In Fig. 3.4 node c chooses node 6 as the next node, since the angle ∠6cd is the smallest among all. \emph{Compass} is not a loop-free algorithm.
+\emph{Compass} (or \emph{Directional, DIR}) algorithm \cite{urrutia:compass} uses the direction of nodes to selects the best forwarding node. The current node \(c\) uses the location information of \(d\) to calculate its direction. Then, forwards the packet to the neighbor node \(u\) such that the direction \(cu\) is closest to the direction \(cd\), that is the neighbor node \(u\) that minimizes the angle between \(c\) and \(d\), \(min\{\angle u_1cd, ..., \angle u_ncd\}\). In Fig. \ref{fig:progress} node \(c\) chooses node \(6\) as the next node, since the angle \(\angle 6cd\) is the smallest among all. \emph{Compass} is not a loop-free algorithm.
 
 \subsection{3D Most Forward}
-\emph{Most Forward}, a.k.a \emph{MFR} algorithm \cite{tak:mfr} is very similar to \emph{Greedy}, but, in this case, the current node \(c\) forwards the packet to the neighbor node \(u\) whose projection on the line between \(c\) and \(d\) is closer to \(d\), \(min\{d(u'_1, d), ..., dist(u'_n, d)\}\). If the packet reaches a local minimum, the algorithm fails. In most cases \emph{MFR} choose the same path of \emph{Greedy}. In Fig. \ref{fig:progress} an example of this strategy is shows. Node \(c\) selects node 5 as next node, since the latter has the smallest projected distance to \(d\), on the line \(sd\). \emph{Most Forward} is a \emph{loop-free} algorithm.
+\emph{Most Forward}, a.k.a \emph{MFR} algorithm \cite{tak:mfr} is very similar to \emph{Greedy}, but, in this case, the current node \(c\) forwards the packet to the neighbor node \(u\) whose projection on the line between \(c\) and \(d\) is closer to \(d\), \(min\{d(u'_1, d), ..., dist(u'_n, d)\}\). If the packet reaches a local minimum, the algorithm fails. In most cases \emph{MFR} choose the same path of \emph{Greedy}. In Fig. \ref{fig:progress} node \(c\) selects node \(5\) as next node, since the latter has the smallest projected distance to \(d\), on the line \(sd\). \emph{Most Forward} is a \emph{loop-free} algorithm.
 
 \subsection{3D Ellipsoid}
-In \emph{Ellipsoid} algorithm \cite{yama:compass}, the current node \(c\) forwards the packet to the neighbor node \(u\) that minimizes the sum of the distance from node \(c\) to \(u\) and the distance from node \(u\) and the destination node \(d\), \(min\{dist(u_1, c) + dist(u_1, d), ..., dist(u_n, c) + d(u_n, d)\}\). If the packet reaches a local minimum, the algorithm fails. In Fig. \ref{fig:progress} there is an example (cambiare dire cosa succede).
+In \emph{Ellipsoid} algorithm \cite{yama:compass}, the current node \(c\) forwards the packet to the neighbor node \(u\) that minimizes the sum of the distance from node \(c\) to \(u\) and the distance from node \(u\) and the destination node \(d\), \(min\{dist(u_1, c) + dist(u_1, d), ..., dist(u_n, c) + d(u_n, d)\}\). If the packet reaches a local minimum, the algorithm fails. In Fig. \ref{fig:progress} the next node chosen is \(6\), using \emph{Ellipsoid}.
 
-\subsection{Random Walk}
-\emph{Random Walk} algorithm try to solve the local minimum problem described in previous section, by choosing the next node randomly from a subset of the current node's neighbors that makes progress to the destination. Already since 1984, some authors have tried to put the concepts of randomization algorithms in order to avoid the emergence of loops \cite{nelson:random, bose:compass, fevens:abface}. Routing algorithms that use randomization are usually considered to fail when the number of hops in the path computed so far exceeds a \emph{threshold} value, here called \(TTLR\) (\emph{Time To Live Random}).
-\subsubsection{3D extension of Random Walk}
+\begin{figure}
+\centering
+    \includegraphics[width=0.5\textwidth]{progress}
+  \caption{Illustration of several next nodes chosen by \(c\) using the progress-based forwarding strategies.}
+  \label{fig:progress}
+\end{figure}
+
+
+\subsection{3D Random Walk}
+\emph{Random Walk} algorithm try to solve the local minimum problem described in previous section, by choosing the next node randomly from a subset of the current node's neighbors that makes progress to the destination. Already since 1984, some authors have tried to put the concepts of randomization algorithms in order to avoid the emergence of loops \cite{nelson:random, bose:compass, fevens:abface}. Tipically, randomization performs as follow: let \(cw(u)\) be the neighbor node in \(N(c)\), over the line \(cd\), that minimizes one of the progress values defined in previous progress-based algorithms (distance, angle, etc.) and let \(ccw(u)\) be the neighbor node in \(N(c)\), under the line \(cd\), that minimizes the same one; then, randomized algorithms moves the packet to one of \{\(cw(u)\), \(cww(u)\)\} with equal probability or a probability weighted according to the progress values. Routing algorithms that use randomization are usually considered to fail when the number of hops in the path computed so far exceeds a \emph{threshold} value, here called \(TTLR\) (\emph{Time To Live Random}).\\
+Extension of randomized algorithm in 3D is not trivial, because it is not obvious to choose the best way to determine candidate neighbors. The reason is that in a three-dimensional graph there is no concept of above and below a line passing from source to destination. Therefore, in \cite{abdallah:random} authors propose an extension for the randomized-based algorithm from 2D to 3D, that uses the concept of 3D planes. This new algorithm is called \emph{AB3D}. In this document we generalize the concept of randomized-based algorithm defining a parametric function that has four attributes, that are:
+\begin{itemize}
+\item \(m\): are possible candidate neighbors to choose from \(N(c)\).
+\item \(R\): is the name of progress-based strategy used to choose the \(m\) candidates, and it is one of \(R\) (Random), \(CM\) (Compass), \(GR\) (Greedy) or \(MF\) (most Forward), as in \emph{AB3D}.
+\item \(S\): is used to represent the probability weighting when randomly choosing, and it is one of \(U\) (Uniform), \(D\) (Distance) , \(A\) (Angle), \(PD\) (Projection Distance). Probability weightings are defined as in \emph{AB3D}.
+\item \(ab\) (above-below): is a boolean flag indicating whether to define the candidates over and below the Plane \(PL_1\) (or even over and below the plane \(PL_2\), if \(m = 5\)), or select candidates without considering the planes.
+\end{itemize}
+The steps of the algorithm are the following. The current node \(c\) selects a node \(n_1\) from its neighbors, chosen according to the method defined in \(R\) (\(CM\), \(GR\) or \(MF\)). With \(ab = YES\), if \(m\) is \(3\), we define the plane \(PL_1\) identified by the three nodes \(s\), \(d\) and \(n_1\). If \(m\) is \(5\), define also the plane \(PL_2\) that is perpendicular to \(PL_1\) and passes through \(c\) and \(d\), such that the intersection line between the two planes is the line \(cd\). Fig. \ref{fig:ab3d} shows an example of network graph and its subdivision with the two planes.
+Then, if the parameter \(m\) was \(3\), \emph{Random Walk} select another two nodes, in addition to \(n_1\). One neighbor \(n_2\) is chosen from the above of the plane \(PL_1\) according to \(R\) and one neighbor \(n_3\) is chosen from the below of the plane \(PL_1\) according to \(R\). If \(m\) was \(5\), in addition to \(n_1\), the algorithm choose from \(N(c)\) four neighbors \(n_2\), \(n_3\), \(n_4\), \(n_5\) each one in one side of the four regions that result from the intersection between \(PL_1\) and \(PL_2\). Once these candidates are determined, node \(c\) selects one of these nodes randomly, according to the probability weighting determined by \(S\), and forwards the packet to the chosen node.
+Instead, with \(ab = NO\), the \(m\) candidates are chosen without a plane subdivision.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/ab3d}
+\caption{In AB3D, plane \(PL_1\) passes through \(s\), \(d\) and \(n_1\), plane \(PL_2\) is orthogonal to \(PL_1\). Both planes contain the line \(sd\).}
+  \label{fig:ab3d}
+\end{figure}
 
 
 \subsection{Greedy-RW-Greedy}
@@ -797,9 +825,9 @@ Appendix one text goes here.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
-\ifCLASSOPTIONcaptionsoff
+%\if CLASSOPTIONcaptionsoff
   \newpage
-\fi
+%\fi
 
 
 
@@ -818,9 +846,9 @@ Appendix one text goes here.
 % http://mirror.ctan.org/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
+\bibliography{bibliography}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
