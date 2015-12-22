@@ -9,6 +9,7 @@
 \usepackage[T1]{fontenc}% optional T1 font encoding
 
 
+
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
 
@@ -144,7 +145,7 @@
 % This package provides a \bm{} to produce bold math symbols.
 % http://www.ctan.org/pkg/bm
 
-
+\usepackage{adjustbox}%
 
 
 
@@ -170,7 +171,7 @@
 
 % *** ALIGNMENT PACKAGES ***
 %
-%\usepackage{array}
+\usepackage{array}
 % Frank Mittelbach's and David Carlisle's array.sty patches and improves
 % the standard LaTeX2e array and tabular environments to provide better
 % appearance and additional user controls. As the default LaTeX2e table
@@ -421,7 +422,7 @@ Wireless Communications, Routing 3D, Algorithm, MANET, Mobility, Forwarding.
 
 \section{Introduction}
 \emph{Mobile ad-hoc Networks} (MANTETs) are autonomous, distributed and self-configuring networks in which mobile terminals are connected by a wireless connection, even through multi-hop communications. This type of network operates without a fixed infrastructure or centralized administration and its flexibility makes it suitable to a wide set of scenarios (e.g., rescue teams, disaster or dangerous environments, military areas, underwater networking). The main characteristic of a MANET is the frequent change of its topology, due to the motion of the terminals. This makes routing discovery and maintenance a very challenging task. 
-\par Evolutions of MANET have considered vehicles (VANETs - Vehicular Ad-hoc Networks), sensors (WSN - Wireless Sensor Networks) and, more recently, microaerial vehicles (drones or UAVs), which can create a \emph{Drone Ad-hoc Network} (DANET). These network subclasses differ from MANET for several aspects, such as energy constraint, degree of mobility, type of devices and communication. A DANET generalizes the topology from a 2D topology to a 3D one with a free movement scheme, due to the capability of drones to fly, also in autonomous mode. This trend is continuing to attract researches and practitioners, as well as to become increasingly present in real application. Furthermore, this is a very interesting and challenging scenario, especially when considering the routing process.
+\par Evolutions of MANET have considered vehicles (VANETs - Vehicular Ad-hoc Networks), sensors (WSN - Wireless Sensor Networks) and, more recently, microaerial vehicles (drones or UAVs) \cite{puro:deployment, scherer:rescue}, which can create a \emph{Drone Ad-hoc Network} (DANET) \cite{asa:net}. These network subclasses differ from MANET for several aspects, such as energy constraint, degree of mobility, type of devices and communication. A DANET generalizes the topology from a 2D topology to a 3D one with a free movement scheme, due to the capability of drones to fly, also in autonomous mode. This trend is continuing to attract researches and practitioners, as well as to become increasingly present in real application. Furthermore, this is a very interesting and challenging scenario, especially when considering the routing process.
 \par In a generic MANET, the wireless nature of communication channel, the mobility of the nodes, and the lack of a communication infrastructure, make the problem of routing very complex. Mobile hosts move free in the space, resulting in a dynamic network with potentially rapid changes of its topology, without some notifications. Moreover, the mobile hosts often use batteries which have a limited energy supply, that brings to an energy comsumption problem in routing. \emph{Position-based} routing protocols (or geographic-based protocols) try to tackle these issues, using a different mechanism for path discovery. These routing protocols use the geographic position of the nodes to perform packet forwarding, exploiting the recent availability of small, inexpensive, low-power \emph{Global Position System} (GPS) receivers. Each node determines it own geographic position using GPS, and bases the routing decision only on the position of itself, the destination's position and the neighbors' position. This local knowledge of the network make position-based routing protocols more scalable towards large and high mobile networks, since the nodes do not have to explore the status of the whole network and ever have to store routing tables nor do they need to transmit control messages in the entire network.
 This work focuses on the analysis of the state-of-the-art of 3D position-based routing protocols, and on a performance comparison in a same simulation scenario, that represents a 3D topology network. 
 \par The rest of the paper is organized as follows. Section 2 introduces the routing in MANETs, providing a complete taxonomy of the routing protocols, with particular reference to the position-based protocols. Section 3 describes the performance metrics used for the performance comparison. Section 4 explore the state-of-the-art of of position-based protcols, with an accurate description of the algorithm functioning in each protocol. Section 5 describes the simulation environment and results of the performance evaluation. Finally, section 6 concludes the paper.
@@ -429,9 +430,10 @@ This work focuses on the analysis of the state-of-the-art of 3D position-based r
 \section{Routing in Mobile Ad-hoc Networks}
 A MANET consists of a set of mobile nodes that communicate with each other over wireless links, capable of operating without centralized control or established infratructure. In this type of networks a \emph{multi-hop} routing is needed, since a node needing to send a packet to another node can be not communicate directly with it. There are several situations in which MANETs are desiderable, e.g., in scenarios where infrastructure is not feasible or cost-effective (environmental monitoring, disaster relief, tactical area, etc.).
 \par Recently, with the advent of new technologies that make it possible to miniaturize complex electronic systems, different gadget able to move and fly autonomously o remotely controlled, were born; these are called \emph{unmanned aircraft vehicles} (UAVs), or, more simply, drones. The use of multiple UAVs is playing an important role, in particular considering the possibility to create communications between them, resulting in a DANET. This type of network can be used in a growing number of civil applications, such as policing, firefighting and nonmilitary security work, but often preferred in tactical, battlefield and dangerous scenarios operated without a human presence.
-\par Since MANETs are characterized by frequently topology changes, energy comsumption problems and limited bandwidth, there are various challenges, in particular in routing process. So, the utility of routing mechanism makes it an integral part of any network and there exists a multitude of routing protocols. Nowadays, there are many routing protocols proposed for MANETs to address multi-hop routing. In general there protocols can be categorized in topology-based and position-based approaches. Topology-based routing protocols use the information about links to route the packets, position-based ones use the location information of nodes to make a packet forwarding decision.
+\par Since MANETs are characterized by frequently topology changes, energy comsumption problems and limited bandwidth, there are various challenges, in particular in routing process. So, the utility of routing mechanism makes it an integral part of any network and there exists a multitude of routing protocols. Nowadays, there are many routing protocols proposed for MANETs to address multi-hop routing. Mauve et al. \cite{mauve:survey} and
+Stojmenovic \cite{stoj:position} divide these protocols in two main categories, topology-based and position-based. Topology-based routing protocols use the information about links to route the packets, position-based ones use the location information of nodes to make a packet forwarding decision.
 \par Topology-based protocols consider the network topology and employ \emph{routing tables}, that specify the path or the next-hop to route a packet from a sender to a recipient. There are three strategy that use topology information: proactive, reactive and hybrid. A protocol is said \emph{proactive} when each node keeps an up-to-date information reflecting the state of the network and this information is used when a message should be sent. A protocol is said \emph{reactive} when the routing patch is created only when necessary and it is preferred in mobile networks. A significative example of reactive protocol is named \emph{AODV} (\emph{Ad-hoc On Demand Distance Vector}). \emph{Hybrid} protocols combine the advantages of proactive and reactive protocols.
-\par Due to change in topology of mobile environment, the maintenance of routing tables require an excessive overhead for information updates (continuosly exchange of control messages). Furthermore, in large networks this situation can only get worse, and routing tables size become very high. For this reason, topology-based protocols become almost useless in more dynamic and large networks. Position-based approaches are introduced to eliminate some of these limitations MANETs: they do not need to establish and maintains routes, thereby elimintating routing table construction and maintenance. This aspects make position-based protocols more scalable, unlike topology-based ones.
+\par Due to change in topology of mobile environment, the maintenance of routing tables require an excessive overhead for information updates (continuosly exchange of control messages). Furthermore, in large networks this situation can only get worse, and routing tables size become very high. For this reason, topology-based protocols become almost useless in more dynamic and large networks. Position-based approaches are introduced to eliminate some of these limitations MANETs: they do not need to establish and maintains routes, thereby elimintating routing table construction and maintenance. This aspects make position-based protocols more scalable, unlike topology-based ones \cite{li:scalable}.
 
 \subsection{Position-based Routing Protocols}
 Position-based (or geographic) routing protocols use the position of the nodes in the network to make forwarding decisions. The first proposed protocols that use geographic information were intended to act as support to the topology-based protocols, to limit the propagation of route request packets into a restricted area. For instance, one of the early proposed protocol was \emph{Location Aided Routing} (LAR), that generally limits the propagation area of packets into a rectangle containing source node and destination node positions. Position-based routing protocols are local, because a node forwards a message based only on its position, the position of the destination and the position of its neighbors to which it can communicate directly. Therefore, these protocols do not require a global knowledge of the network, but they rely on having only a piece of network information. To obtain coordinates, nodes use a \emph{location service} such as GPS (\emph{Global Positionin System}), or other types of location services. To acquire the position of the neighbors, nodes are provided of a beaconing mechanism in which each node sends a beacon to its neighbor nodes, containing its position.
@@ -443,14 +445,14 @@ Position-based (or geographic) routing protocols use the position of the nodes i
 \end{itemize}
 
 \subsection{Taxonomy}
-In the years there was make several taxonomies to classificate position-based routing protocols. In this survey we classificate these according to two types of strategies: path strategy and forwarding strategy.
+In the years there was make several taxonomies to classificate position-based routing protocols \cite{azz:survey, kun:survey}. In this survey we classificate these according to two types of strategies: path strategy and forwarding strategy.
 \subsubsection{Path Strategy} represents how a packet traverses a network. The packet can uses either a single path to reach the destination, or multiple paths. 
 Single path strategy requires that each node forwards the packet to only one of its neighbors. So, there is one copy of a packet in the whole network. Algorithms that uses single path strategies may be even more robust and with less communication overhead.
-Multipath strategy allows a node to forward multiple copies of the same packet to several neighbors. This strategy is also defined as \textit{flooding}. Flooding can be costly in terms of wasted bandwidth, because packet become duplicated in the network. Moreover, duplicate packets may circulate forever in loop, unless certain precaution.
+Multipath strategy allows a node to forward multiple copies of the same packet to several neighbors. This strategy is also defined as \textit{flooding}. Flooding can be costly in terms of wasted bandwidth, because packet become duplicated in the network. Moreover, duplicate packets may circulate forever in loop, unless certain precaution. Limited flooding tries to restrict the propagation of the duplicate packets within a defined area; examples of limited flooding protocols are proposed by \cite{basagni:dream, ko:lar}.
 \subsubsection{Forwarding Strategy} describes the forwarding criteria used to send a packet from the current node to a neighbor node in a single step, and it regards especially single path strategies. Every strategy exploits different methods and geometric models. The three main forwarding strategies are \textit{deterministic progress-based}, \textit{randomized progress-based} and \textit{face-based}.
 In deterministic progress-based routing algorithms, the current node (the node holding the packet) forwards the packet at every step to one of its neighbors that make progress to the destination.
 Randomized progress-based strategy is similar to deterministic progress-based method but in this case the next node is chosen uniformly at random or according to a probability distribution, from the set of neighbor nodes or candidate nodes.
-Face-based is a strategy that allows to arrive at a delivery-rate close to 100\% in some cases. In the context of a two-dimensional space, face-based algorithms allows progress between the faces defined by the nodes considering the right-hand rule, with which always guarantee reaching the destination. In the three-dimensional space, the concept of ``\emph{face}'' can not be extended, but some approaches have been proposed that are based mainly on the projection of points in a plane.
+Face-based is a strategy that allows to arrive at a delivery-rate close to 100\% in some cases. In the context of a two-dimensional space, face-based algorithms allows progress between the faces defined by the nodes considering the right-hand rule, with which always guarantee reaching the destination. Position information is used to extract a \emph{planar subgraph} that contains faces whose corners are the nodes. A typical planar subgraph is called \emph{Gabriel Graph} (\emph{GG}), that does not contain two edge that crosses, and \cite{gabriel:gg} demonstrates that if we apply this algorithm to each vertex of \emph{G}, then the resulting graph is connected. In the three-dimensional space, the concept of ``\emph{face}'' can not be extended, but some approaches have been proposed that are based mainly on the projection of points in a plane.
 
 \begin{figure*}[!t]
 \centering
@@ -524,8 +526,8 @@ In the \emph{Ellipsoid} algorithm \cite{yama:compass}, the current node \(c\) fo
 
 
 \subsection{PAB3D}
-\emph{PAB3D} is a randomized algorithm that tries to solve the local minimum problem described in previous section, by choosing the next node randomly from a subset of the current node's neighbors that makes progress to the destination. Already since 1984, some authors have tried to put the concepts of randomization algorithms in order to avoid the emergence of loops \cite{nelson:random, bose:compass, fevens:abface} using the concept of the random walk. Tipically, randomization performs as follow: let \(cw(u)\) be the neighbor node in \(N(c)\), over the line \(cd\), that minimizes one of the progress values defined in previous progress-based algorithms (distance, angle, etc.) and let \(ccw(u)\) be the neighbor node in \(N(c)\), under the line \(cd\), that minimizes the same one; then, randomized algorithms moves the packet to one of \{\(cw(u)\), \(cww(u)\)\} with equal probability or a probability weighted according to the progress values. Routing algorithms that use randomization are usually considered to fail when the number of hops in the path computed so far exceeds a threshold value, here called \(TTLR\) (\emph{Time To Live Random}).\\
-Extension of randomized algorithm in 3D is not trivial, because it is not obvious to choose the best way to determine candidate neighbors. The reason is that in a three-dimensional graph there is no concept of above and below a line passing from source to destination. Therefore, in \cite{abdallah:random} authors propose an extension for the randomized-based algorithm from 2D to 3D, that uses the concept of 3D planes. This new algorithm is called \emph{AB3D} (\emph{Above/Below 3D}) and, instead of a line, it uses a plane to divide the 3D space in two choosing regions. In this document we generalize the concept of randomized-based algorithm defining a parametric algorithm, named \emph{PAB3D} (\emph{Parametrized AB3D}), that has four attributes:
+\emph{PAB3D} is a randomized algorithm that tries to solve the local minimum problem described in previous section, by choosing the next node randomly from a subset of the current node's neighbors that makes progress to the destination. Already since 1984, some authors have tried to put the concepts of randomization algorithms in order to avoid the emergence of loops \cite{nelson:random, bose:compass, fevens:abface} using the concept of the random walk. Tipically, randomization performs as follow: let \(cw(u)\) be the neighbor node in \(N(c)\), over the line \(cd\), that minimizes one of the progress values defined in previous progress-based algorithms (distance, angle, etc.) and let \(ccw(u)\) be the neighbor node in \(N(c)\), under the line \(cd\), that minimizes the same one; then, randomized algorithms moves the packet to one of \{\(cw(u)\), \(cww(u)\)\} with equal probability or a probability weighted according to the progress values. Routing algorithms that use randomization are usually considered to fail when the number of hops in the path computed so far exceeds a threshold value, here called \(TTLR\) (\emph{Time To Live Random}).
+\par Extension of randomized algorithm in 3D is not trivial, because it is not obvious to choose the best way to determine candidate neighbors. The reason is that in a three-dimensional graph there is no concept of above and below a line passing from source to destination. Therefore, in \cite{abdallah:random} authors propose an extension for the randomized-based algorithm from 2D to 3D, that uses the concept of 3D planes. This new algorithm is called \emph{AB3D} (\emph{Above/Below 3D}) and, instead of a line, it uses a plane to divide the 3D space in two choosing regions. In this document we generalize the concept of randomized-based algorithm defining a parametric algorithm, named \emph{PAB3D} (\emph{Parametrized AB3D}), that has four attributes:
 \begin{itemize}
 \item \(m\): are possible candidate neighbors to choose from \(N(c)\).
 \item \(R\): is the name of progress-based strategy used to choose the \(m\) candidates, and it is one of \(R\) (Random), \(CM\) (Compass), \(GR\) (Greedy) or \(MF\) (most Forward), as in \emph{AB3D}.
@@ -545,7 +547,7 @@ Instead, with \(ab = NO\), the \(m\) candidates are chosen without a plane subdi
 \end{figure}
 
 \subsection{Greedy-Random-Greedy}
-\emph{Greedy-Random-Greedy} (\emph{GRG}) algorithm belongs to \emph{progress-based/randomized-based} class, and uses \emph{Greedy} as the primary stage and a randomized algorithm, such as \emph{PAB3D}, as a recovery strategy. The general procedure of this algorithm is the following: the algorithm starts with the greedy phase until it finds a local minimum \(c\). At this point, \emph{GRG} stores the distance \(dist(c, d)\), and switches to the random phase, as recovery strategy, where the node \(c\) randomly selects one \(u\) of its neighboring nodes, using the steps defined in \emph{PAB3D}. If \(dist(u, d) < dist(c, d)\), then the algorithm resumes the greedy forwarding, otherwise continues with \emph{PAB3D}.
+The \emph{Greedy-Random-Greedy} (\emph{GRG}) algorithm belongs to \emph{progress-based/randomized-based} class, and uses \emph{Greedy} as the primary stage and a randomized algorithm as recovery strategy. Referring to \emph{PAB3D} as the randomized algorithm, obtaining \emph{Greedy-PAB3D-Greedy} (\emph{G-PAB3D-G}), the general procedure of this algorithm is the following: the algorithm starts with the greedy phase until it finds a local minimum \(c\). At this point, \emph{G-PAB3D-G} stores the distance \(dist(c, d)\), and switches to the random phase, as recovery strategy, where the node \(c\) randomly selects one \(u\) of its neighboring nodes, using the steps defined in \emph{PAB3D}. If \(dist(u, d) < dist(c, d)\), then the algorithm resumes the greedy forwarding, otherwise continues with \emph{PAB3D}. In the rest of the paper we refer to the \emph{G-PAB3D-G} algorithm.
 
 \subsection{Projective Face}
 The first extension of face-based strategy in 3D space provides using two orthogonal planes intersected to the line connecting source and destination. In \cite{kao:3d} authors propose \emph{Projective Face}, in which the nodes of the networks are firstly projected onto one plane that contains the line \(sd\), with third point chosen randomly. Then, the \emph{Face} algorithm is performed on this projected graph. If the routing fails, the nodes are then projected onto a second plane, that is orthogonal to the first one and also contains the line \(sd\). Then, the \emph{Face} algorithm is again performed. Fig. \ref{fig:projectiveFace} shows an example of planes configuration in \emph{Projective Face}. Note that, in this case (and in all the following algorithms), since the delivery rate is not guaranteed, the algorithm needs a local threshold value, \(TTLF\) (\emph{Time To Live Face}), in order to terminate the algorithm in case it not reached the destination. This is necessary because the algorithm can get stuck in a loop. More precisely, in this version of algorithm, \(TTLF\) counter is started twice, once for the first plane and one for the orthogonal plane, obtaining a global threshold value, \(TTL \leq 2*TTLF\).
@@ -585,9 +587,10 @@ In \cite{kao:nearly} it is said that performing the face routing on the addition
 
 
 \subsection{Greedy-Face-Greedy}
-\emph{Greedy-Face-Greedy} algorithm (\emph{GFG}), also defined as \emph{Greedy Perimeter Stateless Routing} algorithm (\emph{GPSR}) for 2D networks, uses a combination of greedy method with face method.
+\emph{Greedy-Face-Greedy} algorithm (\emph{GFG}) \cite{bose:gfg}, also defined as \emph{Greedy Perimeter Stateless Routing} algorithm (\emph{GPSR}) \cite{karp:gpsr} for 2D networks, uses a combination of greedy method with face method.
 With \emph{GFG}, a flag is stored in each data packet. This flag can be set into greedy-mode and face-mode (or perimeter-mode), indicating whether the packet is forwarded with \emph{Greedy} or \emph{Face} algorithm. The algorithm starts from \(s\) with \emph{Greedy}, setting the packet into greedy-mode and forwarding it. A node that receives a greedy-mode packet searches among its neighbors the node that is closest to the destination. If this neighbor exists, the current node forwards the packet to its, otherwise it marks the packet into perimeter-mode.
 \emph{GFG} algorithm forwards the perimeter-mode packets performing the same planar graph as the \emph{Face2} algorithm. Moreover, when a packet enters in perimeter-mode at node \(x\), \emph{GFG} set the line \(xd\) as a reference line to the crossing with the faces and records in the packet the location of \(x\) as the node when greedy forwarding mode failed. This information is used at next hops to determine whether and when the packet can be returned to greedy-mode: upon receiving a perimeter-mode packet, the current node \(c\) first compares the location of \(x\) as stored in the packet with the forwarding node's location. \emph{GFG} returns in greedy-mode if the distance from the forwarding node to \(d\) is less than the distance from \(x\) to \(d\). In this case, the packet is set into greedy-mode and the algorithm continues greedy progress towards the destination. Fig. \ref{fig:gfg} shows an example, where the packet starts from \(s\) and travels \(x2\) and \(x3\) in greedy-mode, stopping at \(x3\), that is the local minimum. Then, from \(x3\), the face-mode is started, and forwards the packet on progressively closer faces of the planar graph, each of which is crossed by the line \(cd\). So, the packet reaches \(x4\), \(x5\) and \(x6\) in face-mode. \(x6\) is the closest node to \(d\) than \(x3\), so the packet can be returned to greedy-mode and reach \(d\).
+\par In a 3D context, \emph{GFG} uses \emph{ALSP Face} as face-mode \cite{liu:hybrid}, that offers the best performance in terms of delivery rate.
 
 \begin{figure}[!t]
 \centering
@@ -606,7 +609,7 @@ This algorithm starts as \emph{PAB3D-CFace(1)-PAB3D}, but instead of going back 
 In the extension of \emph{LAR} algorithm in 3D space, with three-dimensional coordinates of source and destination positions, the source node computes the expected zone for \(d\), which is a sphere around \(d\) of radius equal to \(v_max * (t_1 - t_0)\) where \(t_1\) is the current time, \(t_0\) is the time stamp of the position information that c has about d, and \(v_max\) is the maximum speed of the node in the network. This zone is used to define the 3D flooding area, which is the minimum size rectangular box with \(ball(s,r)\) in one corner and the expected zone in the opposite corner. In our case, since we analyze static scenarios (\(v_max = 0\)), the expected zone is \(ball(d,r)\).
 
 \subsection{PAB3D-LAR}
-\emph{PAB3D-LAR} was proposed in \cite{abdallah:high} and hybridize \emph{PAB3D} with \emph{LAR}. This algorithm tries to reduce the high path dilation of the \emph{LAR} algorithm. All the combinations in \emph{PAB3D-LAR} use the same partitions as in the \emph{PAB3D} algorithm. The difference is that, while \emph{PAB3D} selects only one of the \(m\) candidates chosen from the neighborhood, \emph{PAB3D-LAR} sends the packet to all those selected candidates which are within the rectangular box defined as in \emph{LAR}.
+\emph{PAB3D-LAR} was proposed in \cite{abdallah:high, abdallah:hybrid} and hybridize \emph{PAB3D} with \emph{LAR}. This algorithm tries to reduce the high path dilation of the \emph{LAR} algorithm. All the combinations in \emph{PAB3D-LAR} use the same partitions as in the \emph{PAB3D} algorithm. The difference is that, while \emph{PAB3D} selects only one of the \(m\) candidates chosen from the neighborhood, \emph{PAB3D-LAR} sends the packet to all those selected candidates which are within the rectangular box defined as in \emph{LAR}.
 
 
 \section{Performance Evaluation}
@@ -617,8 +620,9 @@ Our simulation scenario consists of \textit{n} nodes placed in random positions 
 
 \subsection{Results}
 We discuss here the outcome of the experimentation and analyze the protocols' performances on different settings.
+
 \subsubsection{Comparison with dynamic number of nodes}
-First comparison performs considered routing protocols in a set of network istances consisting of 50, 100, 150, 200 nodes. The results are shown in Fig. \ref{fig:all_delivery} and \ref{fig:all_path}. From the results in Fig. \ref{fig:all_delivery}, we see immediately that deterministic progress-based forwarding algorithms have the lowest delivery rate, less than 60\% in the case of 150 nodes. This means that in this scenario (150 nodes) there is more chance of finding local minima. Instead, in the case of 200 nodes, we can see an increment of the delivery rate. This suggests a reduction of local minima with a growth of nodes' number starting from 150, in a cube of 500 meters of side length. The \emph{PAB3D} and \emph{G-PAB3D-G} algorithms obtain better results in delivery rate, with a peak in the case of 50 nodes (90\%), as seen in Fig. \ref{fig:all_50_delivery}. Face-based routing algorithms (\emph{Projective Face}, \emph{CFace(3)}, and \emph{ALSP Face}) have generally better results than the previous ones, in terms of delivery rate. This overcoming depends on the fact that these algorithts have more possibility to find the destination node, since \emph{TTLF} resetting. \emph{CFace(3)} can be defined as \emph{Projective Face}, only choosing two plans that are \emph{xy} plane and \emph{xz} plane, and with the addition of the \emph{xz} plane. So, since the algorithm has three chances to find the destination instead of two as in \emph{Projective Face}, the delivery rate is a little higher. The hybrid algorithm, \emph{GFG}, reaches better results compared to \emph{ALSP Face}, regarding delivery rate. This is caused probably by the greedy method phase that, at first, carries the packet towards the destination and then, if a local minimum is found, the face method phase starts, but with less search space. \emph{LAR} and \emph{PAB3D-LAR} are partial flooding-based algorithms. \emph{LAR} has relevant traffic and does not show a very high delivery rate. Not even \emph{PAB3D-LAR} presents a good delivery value, but has almost half of path dilation than \emph{LAR}. From what we can see in Figs. \ref{fig:all_150_delivery}, \ref{fig:all_200_delivery}, the transition from 150 nodes networks to 200 nodes ones increases the delivery rate, due to the increment of the node density and the restricion area includes many more nodes.
+First comparison performs considered routing protocols in a set of network istances consisting of 50, 100, 150, 200 nodes. The results are shown in Figs. \ref{fig:all_delivery} and \ref{fig:all_path}. From the results in Fig. \ref{fig:all_delivery}, we see immediately that deterministic progress-based forwarding algorithms have the lowest delivery rate, less than 60\% in the case of 150 nodes. This means that in this scenario (150 nodes) there is more chance of finding local minima. Instead, in the case of 200 nodes, we can see an increment of the delivery rate. This suggests a reduction of local minima with a growth of nodes' number starting from 150, in a cube of 500 meters of side length. The \emph{PAB3D} and \emph{G-PAB3D-G} algorithms obtain better results in delivery rate, with a peak in the case of 50 nodes (90\%), as seen in Fig. \ref{fig:all_50_delivery}. Face-based routing algorithms (\emph{Projective Face}, \emph{CFace(3)}, and \emph{ALSP Face}) have generally better results than the previous ones, in terms of delivery rate. This overcoming depends on the fact that these algorithts have more possibility to find the destination node, since \emph{TTLF} resetting. \emph{CFace(3)} can be defined as \emph{Projective Face}, only choosing two plans that are \emph{xy} plane and \emph{xz} plane, and with the addition of the \emph{xz} plane. So, since the algorithm has three chances to find the destination instead of two as in \emph{Projective Face}, the delivery rate is a little higher. The hybrid algorithm, \emph{GFG}, reaches better results compared to \emph{ALSP Face}, regarding delivery rate. This is caused probably by the greedy method phase that, at first, carries the packet towards the destination and then, if a local minimum is found, the face method phase starts, but with less search space. \emph{LAR} and \emph{PAB3D-LAR} are partial flooding-based algorithms. \emph{LAR} has relevant traffic and does not show a very high delivery rate. Not even \emph{PAB3D-LAR} presents a good delivery value, but has almost half of path dilation than \emph{LAR}. From what we can see in Figs. \ref{fig:all_150_delivery}, \ref{fig:all_200_delivery}, the transition from 150 nodes networks to 200 nodes ones increases the delivery rate, due to the increment of the node density and the restricion area includes many more nodes.
 
 
 \begin{figure*}[!t]
@@ -668,38 +672,42 @@ First comparison performs considered routing protocols in a set of network istan
 \end{figure*}
 
 \subsubsection{Comparison with dynamic threshold values}
-This performance test has the purpose of assessing the effect of the threshold values respectively for randomized-based and face-based algorithms, that is to see how effective is to increase the \emph{TTLR} and \emph{TTLF} values to increase delivery and path performance. In this test \emph{TTLR} and \emph{TTLF} are dynamic, while the number of nodes \emph{n} is not. Therefore, to get a fair treatment of the various instances and to allow each algorithm reach all their thresholds values (i.e., \emph{CFace(3)} fails after three times \emph{TTLF}), the \emph{TTL} value is calculated equal to \emph{2 * TTLR} for randomized case and to \emph{3 * TTLF} for face case.\\
-
+This performance test has the purpose of assessing the effect of the threshold values respectively for randomized-based and face-based algorithms, that is to see how effective is to increase the \emph{TTLR} and \emph{TTLF} values to increase delivery and path performance. In this test \emph{TTLR} and \emph{TTLF} are dynamic, while the number of nodes \emph{n} is not. Therefore, to get a fair treatment of the various instances and to allow each algorithm reach all their thresholds values (i.e., \emph{CFace(3)} fails after three times \emph{TTLF}), the \emph{TTL} value is calculated equal to \emph{2 * TTLR} for randomized case and to \emph{3 * TTLF} for face case. The number of nodes is fixed to 150.
+\par In Fig. \ref{fig:change_TTLR} we can see the effect of varying the \(TTLF\) threshold value on the average delivery rate and the average of path dilation of \emph{PAB3D} and \emph{G-PAB3D-G}. Remember that the parameter combination chosen and used on both the algorithms in this test is \(m=3\), \(R=Greedy\), \(S=Angle\), \(ab=YES\). As seen in Subfig. \ref{fig:5-13_delivery}, the delivery rate is generally stable from a \(TTLR\) value of 150. It means that, in this scenario and this configuartion of network, the increase of \(TTLR\) up to \(n\) is useless. Since the little increasing of the delivery rate means more success delivered packets added to the average path dilation, there is an increase of the path dilation, as seen in Fig. \ref{fig:5-13_path}. There is no a significally gap between performance values of \emph{PAB3D} and \emph{G-PAB3D-G}, and this means that there is not an important contribution of \emph{Greedy} to reduction of path dilation.
+\par Fig. \ref{fig:change_TTLF} shows the effect of varying the \(TTLF\) threshold value on the average delivery and average path dilation of the four algorithms that use face strategy, \emph{Projective Face}, \emph{CFace(3)}, \emph{ALSP Face} and \emph{GFG}. Remember that \emph{GFG} uses the \emph{ALSP Face} algorithm as recovery phase. The increase of the delivery rate, in Subfig. \ref{fig:7_delivery}, is very significant
+for all the algorithms until the threshold value of 300 (\(2n\)). Subfig. \ref{fig:7_path} shows the corresponding path dilation, that continues to increase even though the delivery rate stop increasing noticeably. This indicates that a lot of looping occurs during the routing process. \emph{ALSP Face}, \emph{CFace(3)} and \emph{GFG} perform well together in
+terms of delivery rate, than other algorithms, but \emph{CFace(3)} has a path dilation that
+grows more compared to the other. \emph{GFG} perform well in delivery rate, and has the least path dilation than the other algorithms, with a value remaining permanently below 10.
 
 \begin{figure*}[!t]
 \centering
-\subfloat[]{\includegraphics[width=0.8\textwidth]{test_5-13_change_TTLR_delivery}%
-\label{fig:all_50_delivery}}
 
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
+\subfloat[]{\includegraphics[width=0.8\textwidth]{test_5-13_change_TTLR_delivery}%
+\label{fig:5-13_delivery}}
+
 \subfloat[]{\includegraphics[width=0.8\textwidth]{test_5-13_change_TTLR_path}%
-\label{fig:all_100_delivery}}
+\label{fig:5-13_path}}
+
+\caption{Delivery rate (a) and path dilation (b) of \emph{PAB3D} and \emph{G-PAB3D-G}, in a graph of 150 nodes, with \(TTLR = 75, 150, 225, 300)\), and \(TTL = 2 * TTLR\).}
+\label{fig:change_TTLR}
 \end{figure*}
 
 \begin{figure*}
 \subfloat[]{\includegraphics[width=0.8\textwidth]{test_7-8-9-10_change_TTLF_delivery}%
-\label{fig:all_150_delivery}}
-
+\label{fig:7_delivery}}
 
 \subfloat[]{\includegraphics[width=0.8\textwidth]{test_7-8-9-10_change_TTLF_path}%
-\label{fig:all_200_delivery}}
+\label{fig:7_path}}
 
-\caption{Results of path dilation}
-\label{fig:all_delivery}
+\caption{Delivery rate (a) and path dilation (b) of \emph{Projective Face}, \emph{CFace(3), \emph{ALSP Face} and \emph{GFG}, in a grapf of 150 nodes, with \(TTLF = 150, 300, 450, 600\)}, in a graph of 150 nodes, with \(TTLF = 150, 300, 450, 600)\), \(TTL = 3 * TTLF\), and \(ABS = 100\).}
+\label{fig:change_TTLF}
 \end{figure*}
 
 
 \subsubsection{Comparison with dynamic min path length}
 This section shows the results relating to the application of all the routing algorithms considered in classes of graphs in which the length of the shortest path source-destination is respectively 1-3, 4-6, 7-9, and >10 hops. These results can be seen in Fig. \ref{fig:all_min_delivery}. Note that for the first class (1-3 hops, in Subfig. \ref{fig:all_min1-3_delivery}), all the algorithms have a high delivery rate and a small path dilation. This happens because there is very little chance that in a so few hops distance there are holes (local minima).
 When it starts to move to longer paths, deterministic progress-based strategies are the first to degenerate, because, as the destination is more distant, there is a greater probability to find holes. As seen in Subfig. \ref{fig:all_min10_delivery}, progress-based algorithms reach about 10\% of delivery rate.
-\emph{PAB3D} and \emph{GRG} perform well up to 4-6 length of minimum path, but from this point the delivery rate decreases. This is because the increasing number of links to choose from source to destination reduces the probability of choosing the righ path. However, the path length of the delivered packet remain short (see Subfig. \ref{fig:all_min4-6_delivery}, PAB3D and GRG histogram). The performance of face-based and hybridized algorithms are also good for high lengths, due to the fact that they succeed in reaching the destination within the \(TTLF\) or \(TTL\), despite the increasing of the distance from source to destination. However, the length of path performed is too high, due to an increment in the number of crossing links during the travel. \cite{IEEEhowto:kopka}
+\emph{PAB3D} and \emph{G-PAB3D-G} perform well up to 4-6 length of minimum path, but from this point the delivery rate decreases. This is because the increasing number of links to choose from source to destination reduces the probability of choosing the righ path. However, the path length of the delivered packet remain short (see Subfig. \ref{fig:all_min4-6_delivery}, PAB3D and G-PAB3D-G histogram). The performance of face-based and hybridized algorithms are also good for high lengths, due to the fact that they succeed in reaching the destination within \(TTLF\) or \(TTL\), despite the increasing of the distance from source to destination. However, the length of path performed is too high, due to an increment in the number of crossing links during the travel.
 
 \begin{figure*}[!t]
 \centering
@@ -790,25 +798,6 @@ When it starts to move to longer paths, deterministic progress-based strategies 
 % the IEEE normally uses this smaller font for tables.
 % The \label must come after \caption as always.
 %
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
 
 % Note that the IEEE does not put floats in the very first column
 % - or typically anywhere on the first page for that matter. Also,
@@ -820,15 +809,74 @@ When it starts to move to longer paths, deterministic progress-based strategies 
 % footnotes above bottom floats. This can be corrected via the
 % \fnbelowfloat command of the stfloats package.
 
+\subsection{Summarized Results}
+A taxonomy of described and tested position-based algorithms is given in table \ref{tab:tax}. It summarizes the main characteristics of these techniques, reporting the results in terms of performance quality. These characteristics are described as follows.
+\begin{itemize}
+\item \textbf{Loop Freedom}: a data packet can be resent into the network to nodes that have previously received the same packet. Thus, the packet can circulate around the network on the same path. In this context, a loop occurs when a path is repeated several times and an expiration of a threshold is necessary to terminate the process.
+\item \textbf{Path Strategy}: algorithms can use either the single path strategy which requires only a single packet is present in the network at any time, or the multi path strategy which requires many copies of the same packet are present in the network.
+\item \textbf{Forwarding Method}: it indicates the forwarding strategy to send packets. There are four main forwarding strategies: progress-based, randomized-based, face-based and hybrid-based, that uses combinations of the first three strategies.
+\item \textbf{Scalability}: ad hoc networks have varying size. A routing protocol that perform well also in large size networks is considered scalable. Scalability is not measured in a particular way and it depends on the outcome of a certain protocol simulation. In this paper, scalability is valued based on the path dilation.
+\end{itemize}
+From the table we can see some considerations. Progress-based forwarding algorithms are highly scalable, but have a low delivery rate. These algorithms are suitable for dense and uniform networks, where there are not voids (local minima). Furthermore, these can be used in combination with other algorithms to reduce the path to reach the destination.
+Randomized-based forwarding strategy have one of the best performances in terms of scalability and delivery. It can outperform the progress-based strategy in sparse networks.
+Face-based forwarding algorithms have a significant path dilation; thus, they are not appropriate for dense networks, because there are many crossed links, and for flow data scenarios. But they perform well in sparse networks, where there are few nodes and so few crossed links.
+Partial flooding-based algorithms can be used in small/medium networks, where multi path strategy does not greatly reduces the performances.
+Hybrid-based algorithms can perform well in a large range of network types, since they combine some advantages from base algorithms: delivery rate is high, path dilation is not high and scalability is high; this depends on the progress/randomized strategy combined with face-based methods.
 
+\begin{table*}[ht!]
+\center
+\small
+\caption{All the algorithms considered in this survey, with their characteristic and performance results.}
+\label{tab:tax}
+%\rotatebox{90}{
+\hspace*{-1.8cm}
+\begin{adjustbox}{max width=1.3\textwidth}
+
+\begin{tabular}{|l|l|l|l|l|l|l|}
+
+\hline
+\textbf{3D Algorithm} & \textbf{Loop Freedom} & \textbf{Path Strategy} & \textbf{Forw. Method} & \textbf{Delivery Rate} & \textbf{Path Dil.} & \textbf{Scalability} \\
+\hline
+\hline
+\textbf{Greedy} & Yes & Single path & Prog-based & Low & Very Low & High \\
+\hline
+\textbf{Compass} & No & Single path & Prog-based  & Low & Very Low & High \\
+\hline
+\textbf{Most Forward} & Yes & Single path & Prog-based & Low & Very Low & High \\
+\hline
+\textbf{Ellipsoid} & Yes & Single path & Prog-based & Low & Very Low & High \\
+\hline
+\textbf{PAB3D} & Yes & Single path & Rand-based & Medium & Low & High \\
+\hline
+\textbf{G-PAB3D-G} & Yes & Single path & Hybrid-based & Medium & Medium & High \\
+\hline
+\textbf{Projective Face} & No & Single path & Face-based & Medium & High & Medium \\
+\hline
+\textbf{CFace(3)} & No & Single path & Face-based & High & High & Medium \\
+\hline
+\textbf{ALSP face} & No & Single path & Face-based & High & High & Medium \\
+\hline
+\textbf{GFG} & No & Single path & Hybrid-based & High & Medium & High \\
+\hline
+\textbf{PAB3D-CFace(1)-PAB3D} & No & Single path & Hybrid-based & High & Medium & High \\
+\hline
+\textbf{PAB3D-CFace(3)} & No & Single path & Hybrid-based & High & Medium & High \\
+\hline
+\textbf{LAR} & No & Multiple path & Prog-based & Medium & High & Medium \\
+\hline
+\textbf{PAB3D-LAR} & No & Multiple path & Prog/Rand-based & Medium & Medium & Medium \\
+\hline
+\end{tabular}
+\end{adjustbox}
+
+\end{table*}
 
 
 \section{Conclusion}
 This survey had depeened, in many ways, the problem of position-based routing applied on three-dimensional networks. Firstly, the reasons of using an approach based on the position is discussed, and then the problems and limitations of the algorithms that use these techniques. 
 \par Deterministic memoryless progress-based strategies can perform well in very dense networks, but not in a sparse networks, due to the problem of local minima. Algorithms that use this strategies, for instance \emph{Greedy}, may be used in combination with other algorithms, as seen, in order to reduce effectively the number of nodes traveled.
-\par The random component in a forwarding decision offers a better chance to reach the destination. In this work, we have recovered all the randomized-based algorithms and unified them into a single algorithm called \emph{PAB3D}, with different input parameters. With a better combination of possible parameters, \emph{PAB3D} reaches a delivery rate of \%80, with a path length of at most three times the minimum path length in the considered scenarios. Hybridizing it with \emph{Greedy}, getting \emph{GRG}, there is not a significantly reduction of path dilation.
-
-
+\par The random component in a forwarding decision offers a better chance to reach the destination. In this work, we have recovered all the randomized-based algorithms and unified them into a single algorithm called \emph{PAB3D}, with different input parameters. With a better combination of possible parameters, \emph{PAB3D} reaches a delivery rate of \%80, with a path length of at most three times the minimum path length in the considered scenarios. Hybridizing it with \emph{Greedy}, getting \emph{G-PAB3D-G}, there is not a significantly reduction of path dilation, but a slight improvement of packet delivery is identified.
+\par Algorithms based on planatization (face-based strategies) are able to reach very high values of performance in packet delivery, with the cost of a very high path lenght. The attempt to hybridize \emph{ALSP Face} with \emph{Greedy}, getting \emph{GFG}, has, in part, raised from the heavy traffic. However, the application of algorithms that use two-dimensional concepts, as the planarization of a graph, does not seem to be a very efficient idea applied in three-dimensional environments, as the number of crosses links is noticeable when the graph is projected, and the followed path is not always \emph{towards} the target node, unlike the two-dimensional case, producing unnecessary traffic.
 
 
 
@@ -846,10 +894,6 @@ This survey had depeened, in many ways, the problem of position-based routing ap
 % starts a section numbered zero.)
 %
 
-
-\appendices
-\section{Appendix 1}
-Appendix one text goes here.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
@@ -881,13 +925,7 @@ Appendix one text goes here.
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
 
 % biography section
 % 
